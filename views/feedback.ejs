@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('header') %>
+</head>
+<body>
+  <main class="container mt-5">
+    <h1 class="text-center"><%= title %></h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Favourite Ice Cream</th>
+          <th>Rating</th>
+          <th>Feedback</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% rows.forEach(function(feedback) { %>
+          <tr>
+            <td><%= feedback.id %></td>
+            <td><%= feedback.name %></td>
+            <td><%= feedback.icecreamtype %></td>
+            <td><%= feedback.rating %></td>
+            <td><%= feedback.feedback %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </main>
+  <%- include('footer') %>
+</body>
+</html>

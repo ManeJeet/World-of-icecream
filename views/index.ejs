@@ -1,0 +1,132 @@
+<%- include('header') %>
+<main class="container mt-5">
+  <form action="/submit-feedback" method="POST" class="needs-validation">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" id="name" name="name" />
+    </div>
+
+    <div class="form-group">
+      <label for="icecream">Favourite Ice Cream:</label>
+      <input type="text" class="form-control" id="icecream" name="icecream" />
+    </div>
+
+    <div class="form-group">
+      <label>Rating:</label><br />
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="rating"
+          id="rating1"
+          value="1"
+        />
+        <label class="form-check-label" for="rating1">1 Star</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="rating"
+          id="rating2"
+          value="2"
+        />
+        <label class="form-check-label" for="rating2">2 Stars</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="rating"
+          id="rating3"
+          value="3"
+        />
+        <label class="form-check-label" for="rating3">3 Stars</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="rating"
+          id="rating4"
+          value="4"
+        />
+        <label class="form-check-label" for="rating4">4 Stars</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="rating"
+          id="rating5"
+          value="5"
+        />
+        <label class="form-check-label" for="rating5">5 Stars</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="rating"
+          id="rating99"
+          value="99"
+        />
+        <label class="form-check-label" for="rating99">99 Stars</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="feedback">Feedback:</label>
+      <textarea
+        class="form-control"
+        id="feedback"
+        name="feedback"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="reset" class="btn btn-secondary">Reset</button>
+  </form>
+  <div class="d-grid gap-5d-md-flex justify-content-md-center mb-4">
+    <a href="/feedback">
+      <button class="btn btn-success" id="getfeedbackBtn">
+        Retrieve Feedbacks From Database
+      </button>
+    </a>
+  </div>
+  <h5 class="mt-4">Search Ice Cream Type</h5>
+  <form action="/search" method="POST">
+    <div class="mb-3">
+      <label for="searchType" class="form-label">Ice Cream Type</label>
+      <input
+        type="text"
+        class="form-control"
+        id="searchType"
+        name="searchType"
+        placeholder="Enter ice cream type to search"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+</main>
+<%- include('footer') %>
+
+
+<script>
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>

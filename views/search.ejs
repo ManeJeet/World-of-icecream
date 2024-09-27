@@ -1,0 +1,31 @@
+<%- include('header') %>
+<main class="container mt-5">
+  <h2>Search Results for "<%= searchType %>"</h2>
+  <% if (feedbacks.length > 0) { %>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Ice Cream Type</th>
+          <th>Rating</th>
+          <th>Feedback</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% feedbacks.forEach(function(feedback) { %>
+          <tr>
+            <td><%= feedback.id %></td>
+            <td><%= feedback.name %></td>
+            <td><%= feedback.icecreamtype %></td>
+            <td><%= feedback.rating %></td>
+            <td><%= feedback.feedback %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No feedback found for "<%= searchType %>".</p>
+  <% } %>
+</main>
+<%- include('footer') %>
