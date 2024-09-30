@@ -25,12 +25,7 @@ pipeline {
                 sh 'npm install'
             }
         }
-
-        stage('Build') {
-            steps {
-                sh 'npm run build' // Modify if you have a different build command
-            }
-        }
+        
 
         stage('Deploy to EC2') {
             steps {
