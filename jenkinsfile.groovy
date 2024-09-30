@@ -26,7 +26,6 @@ pipeline {
             }
         }
         
-
         stage('Deploy to EC2') {
             steps {
                 sshagent (credentials: ["${DEPLOY_SSH_CREDENTIALS}"]) {
