@@ -39,7 +39,7 @@ pipeline {
     ssh -o StrictHostKeyChecking=no ${env.EC2_USER}@${env.EC2_HOST} << 'ENDSSH'
         cd /home/${env.EC2_USER}/${env.APP_NAME}/
         /usr/bin/npm install --production
-        /usr/bin/pm2 reload ecosystem.config.js --env production
+        /usr/local/bin/pm2 reload ecosystem.config.js --env production
     ENDSSH
 """
                 }
