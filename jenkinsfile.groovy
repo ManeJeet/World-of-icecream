@@ -27,24 +27,30 @@ pipeline {
         }
         
         stage('Deploy to EC2') {
-            steps {
-                sshagent (credentials: ["${DEPLOY_SSH_CREDENTIALS}"]) {
-                    // Transfer files to EC2
-                    sh """
-                        rsync -avz --delete --exclude='node_modules' ./ ${EC2_USER}@${EC2_HOST}:/home/${EC2_USER}/${APP_NAME}/
-                    """
+    steps {
+        sshagent (credentials: ["${env.DEPLOY_SSH_CREDENTIALS}"]) {
+            // Transfer built files to EC2
+            sh """
+                rsync -avz --delete --exclude='node_modules' ./dist/ ${env.EC2_USER}@${env.EC2_HOST}:/home/${env.EC2_USER}/${env.APP_NAME}/
+            """
 
-                    // Execute deployment commands on EC2
-                    sh """
-    ssh -o StrictHostKeyChecking=no ${env.EC2_USER}@${env.EC2_HOST} << 'ENDSSH'
-        cd /home/${env.EC2_USER}/${env.APP_NAME}/
-        /usr/bin/npm install --production
-        /usr/local/bin/pm2 reload ecosystem.config.js --env production
-    ENDSSH
-"""
-                }
-            }
+            // Transfer ecosystem.config.js to EC2
+            sh """
+                rsync -avz --delete ecosystem.config.js ${env.EC2_USER}@${env.EC2_HOST}:/home/${env.EC2_USER}/${env.APP_NAME}/
+            """
+
+            // Execute deployment commands on EC2
+            sh """
+                ssh -o StrictHostKeyChecking=no ${env.EC2_USER}@${env.EC2_HOST} << 'ENDSSH'
+                    cd /home/${env.EC2_USER}/${env.APP_NAME}/
+                    npm install --production
+                    pm2 reload ecosystem.config.js --env production
+                ENDSSH
+            """
         }
+    }
+}
+
     }
 
     post {
