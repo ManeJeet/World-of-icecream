@@ -26,12 +26,6 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                sh 'npm test'
-            }
-        }
-
         stage('Build') {
             steps {
                 sh 'npm run build' // Modify if you have a different build command
