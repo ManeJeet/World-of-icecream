@@ -14,9 +14,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                
-                    git branch: "${BRANCH}", url: "${REPO_URL}"
-
+                git branch: "${BRANCH}", url: "${REPO_URL}"
             }
         }
 
@@ -25,7 +23,7 @@ pipeline {
                 sh 'npm install'
             }
         }
-        
+
         stage('Deploy to EC2') {
             steps {
                 sshagent (credentials: ["${env.DEPLOY_SSH_CREDENTIALS}"]) {
@@ -43,9 +41,9 @@ pipeline {
                     sh """
                         ssh ${env.EC2_USER}@${env.EC2_HOST} << 'ENDSSH'
                             cd /home/${env.EC2_USER}/${env.APP_NAME}/
-                            npm install --omit=dev  // Omit devDependencies for production
+                            npm install --omit=dev  # Omit devDependencies for production
                             pm2 reload ecosystem.config.js --env production
-                        ENDSSH
+ENDSSH
                     """
                 }
             }
