@@ -34,23 +34,22 @@ pipeline {
                         ssh ${env.EC2_USER}@${env.EC2_HOST} 'mkdir -p /home/${env.EC2_USER}/${env.APP_NAME}'
                     """
 
-                    // Transfer files to EC2 (exclude node_modules and git)
+                    // Transfer all project files to the EC2 instance
                     sh """
                         rsync -avz --delete --exclude='node_modules' --exclude='.git' ./ ${env.EC2_USER}@${env.EC2_HOST}:/home/${env.EC2_USER}/${env.APP_NAME}/
                     """
 
-                    // Install production dependencies and restart the app
+                    // Ensure you're in the correct directory and install production dependencies
                     sh """
                         ssh ${env.EC2_USER}@${env.EC2_HOST} << 'ENDSSH'
                             cd /home/${env.EC2_USER}/${env.APP_NAME}/
-                            npm install --production  // Install production dependencies
-                            pm2 reload ecosystem.config.js --env production  // Restart app with PM2
+                            npm install --omit=dev  // Omit devDependencies for production
+                            pm2 reload ecosystem.config.js --env production
                         ENDSSH
                     """
                 }
             }
         }
-
     }
 
     post {
