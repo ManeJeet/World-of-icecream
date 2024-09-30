@@ -2,19 +2,21 @@ pipeline {
     agent any
 
     environment {
-        // Define environment variables
-        APP_NAME = 'world-of-icecream' // Replace with your application name
-        EC2_USER = 'ubuntu' // Replace with your EC2 username (e.g., ec2-user, ubuntu)
-        EC2_HOST = '3.26.48.92' // Replace with your EC2 instance IP or hostname
-        SSH_KEY_CREDENTIALS = 'myKey' // Jenkins SSH credentials ID
-        REPO_URL = 'git@github.com:ManeJeet/World-of-icecream.git' // Replace with your repository URL
-        BRANCH = 'main' // Replace with your target branch
+        APP_NAME = 'World-of-icecream' // Replace with your application name
+        EC2_USER = 'ec2-user' // Replace with your EC2 username (e.g., ec2-user, ubuntu)
+        EC2_HOST = 'your.ec2.instance.ip' // Replace with your EC2 instance IP or hostname
+        DEPLOY_SSH_CREDENTIALS = 'jenkins-ec2-deploy-key' // The ID for EC2 deployment SSH credentials
+        GIT_SSH_CREDENTIALS = 'jenkins-github-ssh-key' // The ID for GitHub SSH credentials
+        REPO_URL = 'git@github.com:ManeJeet/World-of-icecream.git' // SSH URL for GitHub
+        BRANCH = 'main' // Your target branch
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: "${BRANCH}", url: "${REPO_URL}"
+                sshagent (credentials: ["${GIT_SSH_CREDENTIALS}"]) {
+                    git branch: "${BRANCH}", url: "${REPO_URL}"
+                }
             }
         }
 
@@ -38,8 +40,7 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                // Use SSH agent to handle SSH key authentication
-                sshagent (credentials: ["${SSH_KEY_CREDENTIALS}"]) {
+                sshagent (credentials: ["${DEPLOY_SSH_CREDENTIALS}"]) {
                     // Transfer files to EC2
                     sh """
                         rsync -avz --delete --exclude='node_modules' ./ ${EC2_USER}@${EC2_HOST}:/home/${EC2_USER}/${APP_NAME}/
