@@ -36,12 +36,12 @@ pipeline {
 
                     // Execute deployment commands on EC2
                     sh """
-                        ssh ${EC2_USER}@${EC2_HOST} << 'ENDSSH'
-                            cd /home/${EC2_USER}/${APP_NAME}/
-                            npm install --production
-                            pm2 reload ecosystem.config.js --env production
-                        ENDSSH
-                    """
+    ssh -o StrictHostKeyChecking=no ${env.EC2_USER}@${env.EC2_HOST} << 'ENDSSH'
+        cd /home/${env.EC2_USER}/${env.APP_NAME}/
+        /usr/bin/npm install --production
+        /usr/bin/pm2 reload ecosystem.config.js --env production
+    ENDSSH
+"""
                 }
             }
         }
