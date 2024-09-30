@@ -3,9 +3,9 @@ pipeline {
 
     environment {
         APP_NAME = 'World-of-icecream' // Replace with your application name
-        EC2_USER = 'ec2-user' // Replace with your EC2 username (e.g., ec2-user, ubuntu)
+        EC2_USER = 'ubuntu' // Replace with your EC2 username (e.g., ec2-user, ubuntu)
         EC2_HOST = 'your.ec2.instance.ip' // Replace with your EC2 instance IP or hostname
-        DEPLOY_SSH_CREDENTIALS = 'jenkins-ec2-deploy-key' // The ID for EC2 deployment SSH credentials
+        DEPLOY_SSH_CREDENTIALS = 'myKey' // The ID for EC2 deployment SSH credentials
         GIT_SSH_CREDENTIALS = 'gitKey' // The ID for GitHub SSH credentials
         REPO_URL = 'git@github.com:ManeJeet/World-of-icecream.git' // SSH URL for GitHub
         BRANCH = 'main' // Your target branch
@@ -14,9 +14,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                sshagent (credentials: ["${GIT_SSH_CREDENTIALS}"]) {
+                
                     git branch: "${BRANCH}", url: "${REPO_URL}"
-                }
+
             }
         }
 
