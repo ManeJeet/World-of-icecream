@@ -27,29 +27,29 @@ pipeline {
         }
         
         stage('Deploy to EC2') {
-    steps {
-        sshagent (credentials: ["${env.DEPLOY_SSH_CREDENTIALS}"]) {
-            // Transfer built files to EC2
-            sh """
-                rsync -avz --delete --exclude='node_modules' ./dist/ ${env.EC2_USER}@${env.EC2_HOST}:/home/${env.EC2_USER}/${env.APP_NAME}/
-            """
+            steps {
+                sshagent (credentials: ["${env.DEPLOY_SSH_CREDENTIALS}"]) {
+                    // Ensure the directory exists on EC2
+                    sh """
+                        ssh ${env.EC2_USER}@${env.EC2_HOST} 'mkdir -p /home/${env.EC2_USER}/${env.APP_NAME}'
+                    """
 
-            // Transfer ecosystem.config.js to EC2
-            sh """
-                rsync -avz --delete ecosystem.config.js ${env.EC2_USER}@${env.EC2_HOST}:/home/${env.EC2_USER}/${env.APP_NAME}/
-            """
+                    // Transfer files to EC2 (exclude node_modules and git)
+                    sh """
+                        rsync -avz --delete --exclude='node_modules' --exclude='.git' ./ ${env.EC2_USER}@${env.EC2_HOST}:/home/${env.EC2_USER}/${env.APP_NAME}/
+                    """
 
-            // Execute deployment commands on EC2
-            sh """
-                ssh -o StrictHostKeyChecking=no ${env.EC2_USER}@${env.EC2_HOST} << 'ENDSSH'
-                    cd /home/${env.EC2_USER}/${env.APP_NAME}/
-                    npm install --production
-                    pm2 reload ecosystem.config.js --env production
-                ENDSSH
-            """
+                    // Install production dependencies and restart the app
+                    sh """
+                        ssh ${env.EC2_USER}@${env.EC2_HOST} << 'ENDSSH'
+                            cd /home/${env.EC2_USER}/${env.APP_NAME}/
+                            npm install --production  // Install production dependencies
+                            pm2 reload ecosystem.config.js --env production  // Restart app with PM2
+                        ENDSSH
+                    """
+                }
+            }
         }
-    }
-}
 
     }
 
