@@ -3,7 +3,7 @@ module.exports = {
     apps: [
       {
         name: "World-of-icecream",
-        script: "./server.js", // Replace with your main application file
+        script: "./index.js", // Replace with your main application file
         instances: "max", // Or specify a number like 2
         exec_mode: "cluster", // Or "fork" for single instance
         env: {
