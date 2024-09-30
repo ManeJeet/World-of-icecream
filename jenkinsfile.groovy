@@ -16,7 +16,7 @@ pipeline {
         
         stage('Deploy') {
             steps {
-                echo 'Deploying to staging environment...'
+                echo 'hello world'
             }
         }
         
