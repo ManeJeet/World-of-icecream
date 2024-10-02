@@ -36,19 +36,15 @@ pipeline {
         stage('Code Quality') {
     steps {
         script {
-            // Run Sonar Scanner in Docker
-            sh """
-                docker run --rm \
-                -e SONAR_HOST_URL=${SONAR_HOST_URL} \
-                -e SONAR_LOGIN=${SONAR_LOGIN} \
-                -v \$(pwd):/usr/src \
-                sonarsource/sonar-scanner-cli \
-                -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                -Dsonar.sources=src
-            """
+            // This will trigger the Sonar analysis
+            def scannerHome = tool 'SonarQube Scanner' // Ensure this matches your configured tool name
+            withSonarQubeEnv('SonarQube') { // Use the name you assigned for SonarQube in Jenkins
+                sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=src"
+            }
         }
     }
 }
+
 
 
         stage('Quality Gate') {
