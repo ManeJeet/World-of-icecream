@@ -9,9 +9,9 @@ pipeline {
         GIT_SSH_CREDENTIALS = 'gitKey' // The ID for GitHub SSH credentials
         REPO_URL = 'https://github.com/ManeJeet/World-of-icecream.git' // SSH URL for GitHub
         BRANCH = 'main' // Your target branch
-        SONARQUBE_URL = 'http://localhost:9000' // SonarQube server URL
-        SONARQUBE_PROJECT_KEY = 'wrold_of_icecream' // Replace with your SonarQube project key
-        SONARQUBE_TOKEN = 'squ_b84ec01b8b7ace7fef9981d31909827ccd7c11bf' // SonarQube token for authentication
+        SONAR_PROJECT_KEY = 'world_of_icecream' // Your SonarQube project key
+        SONAR_HOST_URL = 'http://localhost:9000' // SonarQube host URL
+        SONAR_LOGIN = 'squ_b84ec01b8b7ace7fef9981d31909827ccd7c11bf' // Your SonarQube login token
     }
 
     stages {
@@ -36,15 +36,18 @@ pipeline {
         stage('Code Quality') {
             steps {
                 script {
-                    // Run SonarQube analysis
-                    sh """
-                        sonar-scanner \
-                            -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} \
-                            -Dsonar.sources=src \
-                            -Dsonar.host.url=${SONARQUBE_URL} \
-                            -Dsonar.login=${SONARQUBE_TOKEN}
-                    """
+                    // Run Sonar Scanner
+                    withSonarQubeEnv('SonarQube') { // Use the name you assigned for SonarQube Scanner in Jenkins
+                        sh "sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=src -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_LOGIN}"
+                    }
                 }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                // Wait for SonarQube quality gate results
+                waitForQualityGate abortPipeline: true
             }
         }
 
