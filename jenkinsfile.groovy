@@ -34,15 +34,22 @@ pipeline {
         }
 
         stage('Code Quality') {
-            steps {
-                script {
-                    // Run Sonar Scanner
-                    withSonarQubeEnv('SonarQube') { // Use the name you assigned for SonarQube Scanner in Jenkins
-                        sh "sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=src -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_LOGIN}"
-                    }
-                }
-            }
+    steps {
+        script {
+            // Run Sonar Scanner in Docker
+            sh """
+                docker run --rm \
+                -e SONAR_HOST_URL=${SONAR_HOST_URL} \
+                -e SONAR_LOGIN=${SONAR_LOGIN} \
+                -v \$(pwd):/usr/src \
+                sonarsource/sonar-scanner-cli \
+                -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                -Dsonar.sources=src
+            """
         }
+    }
+}
+
 
         stage('Quality Gate') {
             steps {
