@@ -41,7 +41,7 @@ pipeline {
 docker run --rm \
   -e SONAR_HOST_URL=http://localhost:9000 \
   -e SONAR_LOGIN=squ_b84ec01b8b7ace7fef9981d31909827ccd7c11bf \
-  -v ${env.WORKSPACE}:/usr/src \
+  -v "/Users/jeetmane/.jenkins/workspace/Task 6.2HD:/usr/src" \
   sonarsource/sonar-scanner-cli \
   -Dsonar.projectKey=world_of_icecream \
   -Dsonar.sources=src
