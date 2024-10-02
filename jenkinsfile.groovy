@@ -29,6 +29,17 @@ pipeline {
             }
         }
 
+        stage('Code Quality') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarScanner'  // SonarScanner tool configured in Jenkins
+                    withSonarQubeEnv('SonarQube') {  // Use SonarQube environment settings
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.login=${SONAR_TOKEN}"  // Run SonarQube scanner with the token
+                    }
+                }
+            }
+        }
+
         stage('Deploy to EC2') {
             steps {
                 sshagent (credentials: ["${env.DEPLOY_SSH_CREDENTIALS}"]) {
