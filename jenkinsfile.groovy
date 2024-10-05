@@ -71,7 +71,7 @@ ENDSSH
 
         // Trigger Prometheus monitoring
         sh '''
-        curl -X POST http://<3.26.48.92>:<9090>/api/v1/admin/tsdb/snapshot
+        curl -X POST http://3.26.48.92:9090/api/v1/admin/tsdb/snapshot
         echo "Monitoring triggered on Prometheus"
         '''
     }
@@ -79,5 +79,6 @@ ENDSSH
         echo 'Deployment failed.'
     }
 }
+
 
 }
