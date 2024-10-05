@@ -66,11 +66,18 @@ ENDSSH
     }
 
     post {
-        success {
-            echo 'Deployment succeeded!'
-        }
-        failure {
-            echo 'Deployment failed.'
-        }
+    success {
+        echo 'Deployment succeeded!'
+
+        // Trigger Prometheus monitoring
+        sh '''
+        curl -X POST http://<3.26.48.92>:<9090>/api/v1/admin/tsdb/snapshot
+        echo "Monitoring triggered on Prometheus"
+        '''
     }
+    failure {
+        echo 'Deployment failed.'
+    }
+}
+
 }
